@@ -2,64 +2,56 @@
 //import util
 //import unique ID - need to install uuid (npmjs.com uuid)
 
+const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
+const util = require("util");
 
-const readfileAsync = util.promisfy(fs.readfile)
-//writefile
+const readFileAsync = util.promisify(fs.readFile);
+const writeFileAsync = util.promisify(fs.writeFile);
 
+class DatabaseOp {
+  readNote() {
+    return readFileAsync("db/db.json", "utf-8");
+  }
 
-// Class NoteData {
+  writeNote(note) {
+    return writeFileAsync("db/db.json", JSON.stringify(note));
+  }
 
+  getNote() {
+    return this.readNote().then((note) => {
+      let newParsedNote;
 
-//readNote(){
-    return readfileAsync('db/db.json', 'utf-8')
+      try {
+        newParsedNote = [].concat(JSON.parse(note));
+      } catch (err) {
+        newParsedNote = [];
+      }
+
+      return newParsedNote;
+    });
+  }
+
+  addNote(note) {
+    const { title, text } = note;
+
+    if (!title || !text) {
+      throw new Error("write your message");
+    }
+
+    const newNote = { title, text, id: uuidv4() };
+
+    return this.getNote()
+      .then((notes) => [...notes, newNote])
+      .then((updateNewNote) => this.writeNote(updateNewNote))
+      .then(() => newNote);
+  }
+
+  deleteNote(id) {
+    return this.getNote()
+      .then((notes) => notes.filter((noteID) => noteID.id !== id))
+      .then((correctNote) => this.writeNote(correctNote));
+  }
 }
 
-
-//writeNote(data){
-    return writeAsync('db/db.json', JSON.stringifyd(atet) )
-}
-
-
-
-//getNote({  
-
-// let varaible 
-
-try {
-
-    //variable 
- 
-
-} catch (err){
-
-}
-
-
-})
-
-
-
-//postNote(){
-
-const {title, text} = note
-
-// add unique id to it and creat object
-
-// return getNote()
-//.then() add ..note, newobject
-//.then write note
-//.then render note
-}
-
-
-//deleteNote(){
-   //retrun getnote
-   //then() filter id
-   //writeNote func 
-}
-
-
-//}
-
-
-module.exports = new Classname()
+module.exports = new DatabaseOp();

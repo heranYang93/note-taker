@@ -4,8 +4,6 @@ let saveNoteBtn;
 let newNoteBtn;
 let noteList;
 
-let getStartedBtn = document.getElementById(".getStarted");
-
 if (window.location.pathname === "/notes") {
   noteTitle = document.querySelector(".note-title");
   noteText = document.querySelector(".note-textarea");
@@ -13,18 +11,6 @@ if (window.location.pathname === "/notes") {
   newNoteBtn = document.querySelector(".new-note");
   noteList = document.querySelectorAll(".list-container .list-group");
 }
-
-//From landing page to note page
-getStartedBtn.addEventListener("click", redirectPage);
-const redirectPage = (evt) => {
-  evt.preventDefault();
-  fetch("/notes", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-};
 
 // Show an element
 const show = (elem) => {
