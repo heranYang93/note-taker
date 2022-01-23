@@ -16,7 +16,9 @@ router.post("/notes", (req, res) => {
 });
 
 router.delete("/notes/:id", (req, res) => {
-  DBClass.deleteNote(req.param.id)
+  const idToBeDeleted = req.params.id.match(/[a-zA-Z0-9-]/g).join("");
+  console.log(idToBeDeleted);
+  DBClass.deleteNote(idToBeDeleted)
     .then(() => res.json({ ok: true }))
     .catch((err) => res.status(500).json(err));
 });

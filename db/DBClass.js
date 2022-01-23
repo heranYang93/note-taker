@@ -48,8 +48,9 @@ class DatabaseOp {
   }
 
   deleteNote(id) {
+    console.log(id);
     return this.getNote()
-      .then((notes) => notes.filter((noteID) => noteID.id !== id))
+      .then((notes) => notes.filter((singleNote) => singleNote.id !== id))
       .then((correctNote) => this.writeNote(correctNote));
   }
 }
